@@ -60,15 +60,28 @@ public:
     int search(string book)
     {
         node* p = head;
-        while (p != NULL) {
-            if (p->book == book) {
-                output();
+        cout<<"Inside Search";
+        
+        while (p != NULL) 
+		{
+            //strncpy(book,p->book , sizeof(p->book));
+            
+            cout<< "inside while";
+            
+            if (!p->book.compare(book))
+                {
+                cout << "Member Name: " << p->name << endl;
+                cout << "Book Name: " << p->book << endl;
+                cout << "Author Name: " << p->author << endl;
+                cout << "Registration no: " << R.ret_rno() << endl;
+            	}	
+            else
+			 {
+                p=p->next;
+                
             }
-            else {
-                p = p->next;
-            }
-        }
-    }
+     	}
+	}
     void deletenode(string book)
     {
         node* p = head;
@@ -96,10 +109,9 @@ public:
             cout << "NO RECORD" << endl;
         else {
             while (p != NULL) {
-                fout << "Member Name: " << p->name << endl;
-                fout << "Book Name: " << p->book << endl;
-                fout << "Author Name: " << p->author << endl;
-                fout << "Reigstration No: " << R.ret_rno() << endl;
+                fout <<p->name << endl;
+                fout <<p->book << endl;
+                fout <<p->author << endl;
                 p = p->next;
             }
         }
@@ -113,7 +125,18 @@ public:
 		 
 	
         if (head == NULL)
-            cout << "NO RECORD" << endl;
+        	if (myfile.is_open())
+				{
+				while ( getline (myfile,line) )
+					{
+					cout << line << '\n';
+					}
+    		myfile.close();
+  			}
+  			else
+  				{
+				  cout << "NO RECORD" << endl;
+				}
         else {
             while (p != NULL) 
 				{
@@ -125,15 +148,80 @@ public:
 					}
     		myfile.close();
   			}
-			else cout << "Unable to open file"<<endl;
-                cout << "Member Name: " << p->name << endl;
-                cout << "Book Name: " << p->book << endl;
-                cout << "Author Name: " << p->author << endl;
-                cout << "Registration no: " << R.ret_rno() << endl;
+			else 
+                cout <<p->name << endl;
+                cout <<p->book << endl;
+                cout <<p->author << endl;
                 p = p->next;
             	}
         	}	
     }
+    void load()
+    {
+    	ifstream myfile;
+	myfile.open("Library.txt");
+	if(myfile.fail())
+	{
+		cout << "Input file opening failed.\n";
+		exit(1);
+	}
+	string search;
+	cin.ignore();
+	cout << "Please enter a name: ";
+	getline(cin,search);
+	int j=0;
+	while(!myfile.eof())
+	{
+		string temp = "";
+		getline(myfile,temp);
+		
+		//int position = temp.find(":");
+		
+		//string strName = temp.substr(position+1, temp.size() - position - 1);
+		
+		for(int i=0;i<search.size();i++)
+		{
+			if(temp[i]==search[i])
+				j++;
+			else
+			{
+				break;
+			}
+		}
+
+		if(j==search.size())
+		{
+			for(int i=0;i<temp.size();i++)
+				cout << temp[i];
+
+			break;
+			
+		}
+	}
+	cout<<endl;
+	string line;
+	int number_of_line=1;
+  //ifstream myfile ("Library.txt");
+  if (myfile.is_open())
+  {
+    while (! myfile.eof() )
+    {
+    	if(number_of_line!=3)
+			{
+			getline (myfile,line);
+      		cout << line << endl;
+      		number_of_line++;
+    		}
+    //myfile.close();
+  	}
+	if(myfile.eof()&&(j!=search.size()))
+	{
+		cout << "Name not found!\n";
+	}
+
+	myfile.close();
+ }	
+}
 };
 main()
 {
@@ -171,10 +259,10 @@ main()
             lib.print();
             break;
         case 4:
-            system("cls");
-            cout << "Enter the book name you want to search: " << endl;
-            getline(cin, book);
-            lib.search(book);
+        	
+        
+            lib.load();
+            /*lib.search(book);
             do {
                 cin.ignore();
                 cout << "Enter 1 to delete the book: " << endl;
@@ -189,7 +277,7 @@ main()
                     cond = false;
                     break;
                 }
-            } while (cond);
+            } while (cond);*/
             break;
         case 5:
             cond = false;
